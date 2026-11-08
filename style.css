@@ -1,8 +1,88 @@
+/* Background Cyberpunk Grid Pattern */
+.bg-grid-pattern {
+  background-size: 40px 40px;
+  background-image: 
+    linear-gradient(to right, rgba(255, 255, 255, 0.03) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(255, 255, 255, 0.03) 1px, transparent 1px);
+}
+
+/* Floating Ambient Animation */
+@keyframes float {
+  0%, 100% { transform: translate(-50%, 0px); }
+  50% { transform: translate(-50%, 25px); }
+}
+
+.animate-float {
+  animation: float 14s ease-in-out infinite;
+}
+
+/* Interactive Spotlight Card */
+.spotlight-card {
+  background: radial-gradient(
+    650px circle at var(--mouse-x, 50%) var(--mouse-y, 50%),
+    rgba(99, 102, 241, 0.2),
+    rgba(147, 51, 234, 0.05) 40%,
+    transparent 70%
+  );
+}
+
+/* Radar Wave Pulse */
+@keyframes radarPulse {
+  0% {
+    transform: scale(0.85);
+    opacity: 0.8;
+  }
+  100% {
+    transform: scale(1.6);
+    opacity: 0;
+  }
+}
+
+.radar-wave {
+  position: absolute;
+  border-radius: 9999px;
+  border: 1px solid rgba(99, 102, 241, 0.35);
+  animation: radarPulse 3s cubic-bezier(0, 0.2, 0.8, 1) infinite;
+  pointer-events: none;
+}
+
+.animation-delay-500 {
+  animation-delay: 1.5s;
+}
+
+/* Button Light Shimmer */
+.btn-shimmer {
+  position: relative;
+  overflow: hidden;
+}
+
+.btn-shimmer::after {
+  content: '';
+  position: absolute;
+  top: -50%;
+  left: -50%;
+  width: 200%;
+  height: 200%;
+  background: linear-gradient(
+    60deg,
+    transparent 30%,
+    rgba(255, 255, 255, 0.15) 50%,
+    transparent 70%
+  );
+  transform: rotate(30deg);
+  transition: all 0.75s ease;
+  pointer-events: none;
+}
+
+.btn-shimmer:hover::after {
+  left: 100%;
+}
+
 /* Fade In Animation */
 @keyframes fadeIn {
   from {
     opacity: 0;
-    transform: translateY(6px);
+    transform: translateY(8px);
   }
   to {
     opacity: 1;
@@ -14,7 +94,7 @@
   animation: fadeIn 0.25s cubic-bezier(0.16, 1, 0.3, 1) forwards;
 }
 
-/* Remove number spin arrows */
+/* Remove number spin arrows with standard compatibility */
 input::-webkit-outer-spin-button,
 input::-webkit-inner-spin-button {
   -webkit-appearance: none;
@@ -37,9 +117,10 @@ input[type=number] {
 .preset-btn {
   padding: 0.65rem 0.5rem;
   font-size: 0.75rem;
+  font-family: monospace;
   font-weight: 600;
   border-radius: 0.75rem;
-  background-color: rgba(30, 41, 59, 0.6);
+  background-color: rgba(15, 23, 42, 0.6);
   color: #cbd5e1;
   border: 1px solid rgba(51, 65, 85, 0.8);
   transition: all 0.2s ease;
@@ -58,13 +139,14 @@ input[type=number] {
   box-shadow: 0 0 16px rgba(99, 102, 241, 0.45);
 }
 
-/* Custom Range Slider */
+/* Range Slider */
 input[type=range] {
   -webkit-appearance: none;
   appearance: none;
   background: #1e293b;
   border-radius: 9999px;
   height: 6px;
+  cursor: pointer;
 }
 
 input[type=range]::-webkit-slider-thumb {
@@ -74,8 +156,7 @@ input[type=range]::-webkit-slider-thumb {
   height: 18px;
   border-radius: 50%;
   background: #6366f1;
-  cursor: pointer;
-  box-shadow: 0 0 10px rgba(99, 102, 241, 0.6);
+  box-shadow: 0 0 12px rgba(99, 102, 241, 0.7);
   transition: transform 0.15s ease, background-color 0.15s ease;
 }
 
