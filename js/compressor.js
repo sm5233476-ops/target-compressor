@@ -1,6 +1,6 @@
 /**
  * TargetFit - Core Compression Engine
- * 100% Client-Side Binary Search Compressor for Images and PDFs
+ * 100% Client-Side Multi-Pass Binary Search Compressor for Images and PDFs
  */
 
 // Initialize PDF.js Worker
@@ -29,14 +29,14 @@ const Compressor = {
     let bestBlob = null;
     let currentScale = 1.0;
 
-    if (onProgress) onProgress(20, "Analyzing image structure...");
+    if (onProgress) onProgress(20, "Analyzing raster layout...");
 
     // 3 passes: scale down if quality tuning alone cannot fit target KB
     for (let pass = 0; pass < 3; pass++) {
       canvas.width = Math.round(originalWidth * currentScale);
       canvas.height = Math.round(originalHeight * currentScale);
 
-      // White background fallback for transparent PNGs
+      // Clean background for transparency
       ctx.fillStyle = '#FFFFFF';
       ctx.fillRect(0, 0, canvas.width, canvas.height);
       ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
@@ -53,21 +53,19 @@ const Compressor = {
           bestBlob = blob;
           minQuality = midQuality; // Try higher quality
         } else {
-          maxQuality = midQuality; // Reduce quality
+          maxQuality = midQuality; // Lower quality
         }
 
         if (onProgress) {
           const p = 30 + (pass * 20) + (i * 3);
-          onProgress(Math.min(p, 90), `Optimizing target size (${(blob.size / 1024).toFixed(1)} KB)...`);
+          onProgress(Math.min(p, 90), `Approaching target size (${(blob.size / 1024).toFixed(1)} KB)...`);
         }
       }
 
-      // If we met the criteria under target bytes, break
       if (bestBlob && bestBlob.size <= targetBytes) {
         break;
       }
 
-      // If still too big, scale dimensions down
       currentScale *= 0.75;
     }
 
@@ -75,7 +73,7 @@ const Compressor = {
       bestBlob = await this.canvasToBlob(canvas, outputFormat, 0.05);
     }
 
-    if (onProgress) onProgress(100, "Compression complete!");
+    if (onProgress) onProgress(100, "Done!");
     return bestBlob;
   },
 
@@ -86,12 +84,11 @@ const Compressor = {
     const targetBytes = targetSizeKB * 1024;
     const arrayBuffer = await file.arrayBuffer();
 
-    if (onProgress) onProgress(15, "Loading PDF document...");
+    if (onProgress) onProgress(15, "Reading PDF vector tree...");
     const loadingTask = pdfjsLib.getDocument({ data: arrayBuffer });
     const pdf = await loadingTask.promise;
     const numPages = pdf.numPages;
 
-    // Budget bytes per page (15% reserve for PDF document header/structures)
     const availableBytesForPages = targetBytes * 0.85;
     const targetBytesPerPage = Math.max(10 * 1024, Math.floor(availableBytesForPages / numPages));
 
@@ -104,7 +101,7 @@ const Compressor = {
       }
 
       const page = await pdf.getPage(pageNum);
-      const viewport = page.getViewport({ scale: 1.5 }); // Clear readable DPI
+      const viewport = page.getViewport({ scale: 1.5 });
 
       const canvas = document.createElement('canvas');
       const ctx = canvas.getContext('2d');
@@ -113,7 +110,6 @@ const Compressor = {
 
       await page.render({ canvasContext: ctx, viewport: viewport }).promise;
 
-      // Binary search for this page's JPEG representation
       let minQ = 0.05;
       let maxQ = 0.90;
       let pageBlob = null;
@@ -133,7 +129,6 @@ const Compressor = {
         pageBlob = await this.canvasToBlob(canvas, 'image/jpeg', 0.1);
       }
 
-      // Re-embed into new PDF
       const imgBytes = await pageBlob.arrayBuffer();
       const embeddedImage = await newPdfDoc.embedJpg(imgBytes);
       const newPage = newPdfDoc.addPage([viewport.width, viewport.height]);
@@ -145,12 +140,11 @@ const Compressor = {
       });
     }
 
-    if (onProgress) onProgress(95, "Finalizing compressed PDF...");
+    if (onProgress) onProgress(95, "Compiling final PDF container...");
     const finalPdfBytes = await newPdfDoc.save();
     return new Blob([finalPdfBytes], { type: 'application/pdf' });
   },
 
-  // Helper: Load File into Image element
   loadImage(file) {
     return new Promise((resolve, reject) => {
       const img = new Image();
@@ -160,7 +154,6 @@ const Compressor = {
     });
   },
 
-  // Helper: Convert canvas to Blob
   canvasToBlob(canvas, mimeType, quality) {
     return new Promise((resolve) => {
       canvas.toBlob((blob) => resolve(blob), mimeType, quality);
