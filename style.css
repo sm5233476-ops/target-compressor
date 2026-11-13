@@ -1,99 +1,3 @@
-/* Background Cyberpunk Grid Pattern */
-.bg-grid-pattern {
-  background-size: 40px 40px;
-  background-image: 
-    linear-gradient(to right, rgba(255, 255, 255, 0.03) 1px, transparent 1px),
-    linear-gradient(to bottom, rgba(255, 255, 255, 0.03) 1px, transparent 1px);
-}
-
-/* Floating Ambient Animation */
-@keyframes float {
-  0%, 100% { transform: translate(-50%, 0px); }
-  50% { transform: translate(-50%, 25px); }
-}
-
-.animate-float {
-  animation: float 14s ease-in-out infinite;
-}
-
-/* Interactive Spotlight Card */
-.spotlight-card {
-  background: radial-gradient(
-    650px circle at var(--mouse-x, 50%) var(--mouse-y, 50%),
-    rgba(99, 102, 241, 0.2),
-    rgba(147, 51, 234, 0.05) 40%,
-    transparent 70%
-  );
-}
-
-/* Radar Wave Pulse */
-@keyframes radarPulse {
-  0% {
-    transform: scale(0.85);
-    opacity: 0.8;
-  }
-  100% {
-    transform: scale(1.6);
-    opacity: 0;
-  }
-}
-
-.radar-wave {
-  position: absolute;
-  border-radius: 9999px;
-  border: 1px solid rgba(99, 102, 241, 0.35);
-  animation: radarPulse 3s cubic-bezier(0, 0.2, 0.8, 1) infinite;
-  pointer-events: none;
-}
-
-.animation-delay-500 {
-  animation-delay: 1.5s;
-}
-
-/* Button Light Shimmer */
-.btn-shimmer {
-  position: relative;
-  overflow: hidden;
-}
-
-.btn-shimmer::after {
-  content: '';
-  position: absolute;
-  top: -50%;
-  left: -50%;
-  width: 200%;
-  height: 200%;
-  background: linear-gradient(
-    60deg,
-    transparent 30%,
-    rgba(255, 255, 255, 0.15) 50%,
-    transparent 70%
-  );
-  transform: rotate(30deg);
-  transition: all 0.75s ease;
-  pointer-events: none;
-}
-
-.btn-shimmer:hover::after {
-  left: 100%;
-}
-
-/* Fade In Animation */
-@keyframes fadeIn {
-  from {
-    opacity: 0;
-    transform: translateY(8px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
-
-.animate-fadeIn {
-  animation: fadeIn 0.25s cubic-bezier(0.16, 1, 0.3, 1) forwards;
-}
-
 /* Remove number spin arrows with standard compatibility */
 input::-webkit-outer-spin-button,
 input::-webkit-inner-spin-button {
@@ -106,61 +10,56 @@ input[type=number] {
   appearance: textfield;
 }
 
-/* Drag over interactive glow */
+/* Drag over subtle state */
 #drop-zone.dragover {
-  border-color: #818cf8 !important;
-  background-color: rgba(99, 102, 241, 0.12) !important;
-  transform: scale(1.01);
+  border-color: #6366f1 !important;
+  background-color: rgba(99, 102, 241, 0.05) !important;
 }
 
-/* Modern Preset Buttons */
+/* Clean Preset Buttons */
 .preset-btn {
-  padding: 0.65rem 0.5rem;
+  padding: 0.5rem 0.25rem;
   font-size: 0.75rem;
-  font-family: monospace;
-  font-weight: 600;
-  border-radius: 0.75rem;
-  background-color: rgba(15, 23, 42, 0.6);
-  color: #cbd5e1;
-  border: 1px solid rgba(51, 65, 85, 0.8);
-  transition: all 0.2s ease;
+  font-weight: 500;
+  border-radius: 0.5rem;
+  background-color: #0f172a;
+  color: #94a3b8;
+  border: 1px solid #1e293b;
+  transition: all 0.15s ease;
   cursor: pointer;
 }
 
 .preset-btn:hover {
-  background-color: rgba(51, 65, 85, 0.8);
+  background-color: #1e293b;
   color: #ffffff;
 }
 
 .preset-btn.active {
   background-color: #4f46e5 !important;
-  border-color: #818cf8 !important;
+  border-color: #6366f1 !important;
   color: #ffffff !important;
-  box-shadow: 0 0 16px rgba(99, 102, 241, 0.45);
 }
 
-/* Range Slider */
+/* Clean Range Slider */
 input[type=range] {
   -webkit-appearance: none;
   appearance: none;
   background: #1e293b;
   border-radius: 9999px;
-  height: 6px;
+  height: 4px;
   cursor: pointer;
 }
 
 input[type=range]::-webkit-slider-thumb {
   -webkit-appearance: none;
   appearance: none;
-  width: 18px;
-  height: 18px;
+  width: 14px;
+  height: 14px;
   border-radius: 50%;
   background: #6366f1;
-  box-shadow: 0 0 12px rgba(99, 102, 241, 0.7);
-  transition: transform 0.15s ease, background-color 0.15s ease;
+  transition: transform 0.1s ease;
 }
 
 input[type=range]::-webkit-slider-thumb:hover {
-  transform: scale(1.2);
-  background: #818cf8;
+  transform: scale(1.15);
 }
