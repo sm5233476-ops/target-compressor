@@ -2,18 +2,6 @@ document.addEventListener('DOMContentLoaded', () => {
   // Initialize Lucide Icons
   lucide.createIcons();
 
-  // Mouse Spotlight Effect (Linear/Awwwards style)
-  const spotlightCard = document.querySelector('.spotlight-card');
-  if (spotlightCard) {
-    document.addEventListener('mousemove', (e) => {
-      const rect = spotlightCard.getBoundingClientRect();
-      const x = e.clientX - rect.left;
-      const y = e.clientY - rect.top;
-      spotlightCard.style.setProperty('--mouse-x', `${x}px`);
-      spotlightCard.style.setProperty('--mouse-y', `${y}px`);
-    });
-  }
-
   // DOM Elements
   const dropZone = document.getElementById('drop-zone');
   const fileInput = document.getElementById('file-input');
@@ -89,10 +77,10 @@ document.addEventListener('DOMContentLoaded', () => {
     fileOriginalSize.textContent = `${sizeInKB} KB`;
 
     if (file.type === 'application/pdf') {
-      fileIcon.innerHTML = `<i data-lucide="file-text" class="w-6 h-6 text-rose-400"></i>`;
+      fileIcon.innerHTML = `<i data-lucide="file-text" class="w-5 h-5 text-rose-400"></i>`;
       imageFormatWrapper.classList.add('hidden');
     } else {
-      fileIcon.innerHTML = `<i data-lucide="image" class="w-6 h-6 text-brand-400"></i>`;
+      fileIcon.innerHTML = `<i data-lucide="image" class="w-5 h-5 text-indigo-400"></i>`;
       imageFormatWrapper.classList.remove('hidden');
     }
     lucide.createIcons();
@@ -110,7 +98,7 @@ document.addEventListener('DOMContentLoaded', () => {
   function updateTargetUI(val) {
     currentTargetKB = parseInt(val, 10) || 50;
     customSizeInput.value = currentTargetKB;
-    sizeSlider.value = Math.min(currentTargetKB, 2000);
+    sizeSlider.value = Math.min(currentTargetKB, 1500);
     targetFeedback.textContent = `${currentTargetKB} KB`;
 
     presetBtns.forEach(btn => {
@@ -199,10 +187,10 @@ document.addEventListener('DOMContentLoaded', () => {
 
     if (reduction > 0) {
       resReductionBadge.textContent = `-${reduction}%`;
-      resReductionBadge.className = 'bg-emerald-900/60 text-emerald-300 border border-emerald-800/60 px-2.5 py-0.5 rounded-full text-xs font-mono font-semibold';
+      resReductionBadge.className = 'ml-2 text-xs text-emerald-400 font-medium bg-emerald-950/60 border border-emerald-900/60 px-2 py-0.5 rounded';
     } else {
       resReductionBadge.textContent = `Optimal`;
-      resReductionBadge.className = 'bg-amber-900/60 text-amber-300 border border-amber-800/60 px-2.5 py-0.5 rounded-full text-xs font-mono font-semibold';
+      resReductionBadge.className = 'ml-2 text-xs text-amber-400 font-medium bg-amber-950/60 border border-amber-900/60 px-2 py-0.5 rounded';
     }
 
     const ext = currentFile.type === 'application/pdf' 
@@ -212,15 +200,5 @@ document.addEventListener('DOMContentLoaded', () => {
     const baseName = currentFile.name.substring(0, currentFile.name.lastIndexOf('.')) || 'optimized';
     btnDownload.download = `${baseName}_${newKB}KB.${ext}`;
     btnDownload.href = URL.createObjectURL(compressedBlob);
-
-    // Trigger Awwwards Dopamine Confetti Blast!
-    if (window.confetti) {
-      confetti({
-        particleCount: 80,
-        spread: 70,
-        origin: { y: 0.65 },
-        colors: ['#6366f1', '#a855f7', '#10b981', '#ffffff']
-      });
-    }
   }
 });
